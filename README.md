@@ -42,7 +42,7 @@ You have to enable a legacy OpenSSL provider by adding an option when compiling 
 NODE_OPTIONS=--openssl-legacy-provider yarn encore dev
 ```
 
-5. Done! You can check out the site on [https://localhost]
+5. Done! You can check out the site on [https://localhost](https://localhost)
 
 **Following the tuto, don't forget to run any php or symfony command inside your container prefixing it by:**
 
