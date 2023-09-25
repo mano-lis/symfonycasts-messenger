@@ -1,46 +1,51 @@
-# Symfony Docker
+# Additional informations for the dockerized version
 
-A [Docker](https://www.docker.com/)-based installer and runtime for the [Symfony](https://symfony.com) web framework, with full [HTTP/2](https://symfony.com/doc/current/weblink.html), HTTP/3 and HTTPS support.
+As some people seemed to have trouble to run the base project, I dockerized the base code so as people can continue to 
+learn Symfony with the SymfonyCasts' team amazing work. The original README file is still in the project but has been
+renamed. Check it [there](/README_SC.md).
+**To use this version, you need to have docker ([install docker](https://docs.docker.com/engine/install/)) and
+docker compose ([install docker compose](https://docs.docker.com/compose/install/)) installed.**
 
-![CI](https://github.com/dunglas/symfony-docker/workflows/CI/badge.svg)
+## Run the project
 
-## Getting Started
+1. At the first run, you need to build the containers by running this command:
 
-1. If not already done, [install Docker Compose](https://docs.docker.com/compose/install/) (v2.10+)
-2. Run `docker compose build --no-cache` to build fresh images
-3. Run `docker compose up --pull --wait` to start the project
-4. Open `https://localhost` in your favorite web browser and [accept the auto-generated TLS certificate](https://stackoverflow.com/a/15076602/1352334)
-5. Run `docker compose down --remove-orphans` to stop the Docker containers.
+`docker compose build`
 
-## Features
+2. Then you can start the containers:
 
-* Production, development and CI ready
-* [Installation of extra Docker Compose services](docs/extra-services.md) with Symfony Flex
-* Automatic HTTPS (in dev and in prod!)
-* HTTP/2, HTTP/3 and [Preload](https://symfony.com/doc/current/web_link.html) support
-* Built-in [Mercure](https://symfony.com/doc/current/mercure.html) hub
-* [Vulcain](https://vulcain.rocks) support
-* Native [XDebug](docs/xdebug.md) integration
-* Just 2 services (PHP FPM and Caddy server)
-* Super-readable configuration
+`docker compose up -d`
 
-**Enjoy!**
+3. Create the database and run the migration. The .env file is configured to work with PostgreSQL:
 
-## Docs
+```
+docker compose exec php bin/console doctrine:database:create
+docker compose exec php bin/console make:migration
+docker compose exec php bin/console doctrine:migrations:migrate
+```
 
-1. [Build options](docs/build.md)
-2. [Using Symfony Docker with an existing project](docs/existing-project.md)
-3. [Support for extra services](docs/extra-services.md)
-4. [Deploying in production](docs/production.md)
-5. [Debugging with Xdebug](docs/xdebug.md)
-6. [TLS Certificates](docs/tls.md)
-7. [Using a Makefile](docs/makefile.md)
-8. [Troubleshooting](docs/troubleshooting.md)
+If you encounter problem, then run `docker compose exec php bin/console doctrine:database:drop --force`
+and try again the commands below.
 
-## License
+4. Compiling the assets:
 
-Symfony Docker is available under the MIT License.
+As mentioned in the original README ([here](/README_SC.md)) you need to have Node and yarn intalled.
+Then install the dependencies:
 
-## Credits
+```
+yarn install
+```
 
-Created by [Kévin Dunglas](https://dunglas.fr), co-maintained by [Maxime Helias](https://twitter.com/maxhelias) and sponsored by [Les-Tilleuls.coop](https://les-tilleuls.coop).
+You have to enable a legacy OpenSSL provider by adding an option when compiling the assets. E.g. :
+
+```
+NODE_OPTIONS=--openssl-legacy-provider yarn encore dev
+```
+
+5. Done! You can check out the site on [https://localhost]
+
+**Following the tuto, don't forget to run any php or symfony command inside your container prefixing it by:**
+
+`docker compose exec php`
+
+
