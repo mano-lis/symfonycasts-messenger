@@ -48,4 +48,9 @@ NODE_OPTIONS=--openssl-legacy-provider yarn encore dev
 
 `docker compose exec php`
 
+### Known issues
+
+Depending on your OS and docker config, you should run into an issue with FlySystem (Permission denied for creating public/uploads/images).
+You can run `chmod -R 777 public/` to fix it.
+
 
